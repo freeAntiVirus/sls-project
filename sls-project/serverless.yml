@@ -9,10 +9,13 @@ stages:
   default:
     params:
       tableName: "users-table-${sls:stage}"
+      familyTableName: "fam-table-${sls:stage}"
 
 provider:
   name: aws
   runtime: nodejs20.x
+  stage: ${opt:stage, 'dev'}
+  region: ap-southeast-2
   iam:
     role:
       statements:
@@ -24,16 +27,46 @@ provider:
             - dynamodb:PutItem
             - dynamodb:UpdateItem
             - dynamodb:DeleteItem
-          Resource:
-            - Fn::GetAtt: [UsersTable, Arn]
+          Resource: "*"
   environment:
     USERS_TABLE: ${param:tableName}
+    FAMILY_TABLE: ${param:familyTableName}
 
 functions:
   api:
     handler: handler.handler
     events:
       - httpApi: "*"
+  createUser: 
+    handler: handlers/createUser.handler
+    events:
+      - http:
+          method: post
+          path: /createUser
+  getUser: 
+    handler: handlers/getUsers.handler
+    events:
+      - http:
+          method: get
+          path: /users
+  twins: 
+    handler: handlers/twins.handler
+    events:
+      - http:
+          method: get
+          path: /twins
+  createFamily: 
+    handler: handlers/createFamily.handler
+    events:
+      - http:
+          method: post
+          path: /createFamily
+  populateFamily: 
+    handler: handlers/populateFamily.handler
+    events:
+      - http:
+          method: put
+          path: /populateFamily
 
 resources:
   Resources:
@@ -43,11 +76,33 @@ resources:
         AttributeDefinitions:
           - AttributeName: userId
             AttributeType: S
+          - AttributeName: birthday
+            AttributeType: S
         KeySchema:
           - AttributeName: userId
             KeyType: HASH
+        GlobalSecondaryIndexes:
+          - IndexName: BirthdayIndex
+            KeySchema:
+              - AttributeName: birthday
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
         BillingMode: PAY_PER_REQUEST
         TableName: ${param:tableName}
+        
+    FamilyTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: familyId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: familyId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:familyTableName}
+
 
 custom: 
   bundle:
