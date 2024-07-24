@@ -5,7 +5,7 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
 module.exports.handler = async (event, context) => {
-    // Step 1: Retrieve all users
+    // Retrieve all users
     const scanParams = {
         TableName: tableName
     };
@@ -22,7 +22,7 @@ module.exports.handler = async (event, context) => {
             return response;
         }
 
-        // Step 2: Check for users with the same birthday
+        // Check for users with the same birthday
         const birthdayMap = new Map();
         for (const item of scanData.Items) {
             if (birthdayMap.has(item.birthday)) {
@@ -33,14 +33,14 @@ module.exports.handler = async (event, context) => {
         }
 
         // Filter out birthdays with only one user
-        const irishTwins = Array.from(birthdayMap.entries()).filter(([birthday, names]) => names.length > 1);
+        const twins = Array.from(birthdayMap.entries()).filter(([birthday, names]) => names.length > 1);
 
-        if (irishTwins.length > 0) {
+        if (twins.length > 0) {
             const response = {
                 statusCode: 200,
                 body: JSON.stringify({
-                    message: 'Luck is on your side, you are Irish twins.',
-                    twins: irishTwins.map(([birthday, names]) => ({
+                    message: 'Luck is on your side, you found twins.',
+                    twins: twins.map(([birthday, names]) => ({
                         birthday: birthday,
                         names: names.join(' and ')
                     }))

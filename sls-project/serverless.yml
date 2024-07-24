@@ -67,6 +67,12 @@ functions:
       - http:
           method: put
           path: /populateFamily
+  getFamily: 
+    handler: handlers/getFamily.handler
+    events:
+      - http:
+          method: get
+          path: /getFamily
 
 resources:
   Resources:
