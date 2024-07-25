@@ -10,7 +10,7 @@ stages:
     params:
       tableName: "users-table-${sls:stage}"
       familyTableName: "fam-table-${sls:stage}"
-      s3BucketName: "photos-bucket-${sls:stage}"
+      s3BucketName: "${self:custom.PhotosBucket.name}"
 
 provider:
   name: aws
@@ -30,10 +30,14 @@ provider:
             - dynamodb:DeleteItem
           Resource: "*"
         - Effect: Allow
+          Action: 's3:ListBucket'
+          Resource: '*'
+
+        - Effect: Allow
           Action:
-            - s3:PutObject
-            - s3:GetObject
-          Resource: "arn:aws:s3:::${param:s3BucketName}/*"
+            - 's3:PutObject'
+            - 's3:GetObject'
+          Resource: 'arn:aws:s3:::{self:custom.PhotosBucket.name}/*'
   environment:
     USERS_TABLE: ${param:tableName}
     FAMILY_TABLE: ${param:familyTableName}
@@ -84,8 +88,8 @@ functions:
     handler: handlers/uploadFamilyPhoto.handler
     events:
       - http:
-          method: post
-          path: /uploadFamilyPhoto
+          method: patch
+          path: /uploadFamilyPhoto/{familyId}/picture
 
 
 resources:
@@ -126,9 +130,25 @@ resources:
     PhotosBucket:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${param:s3BucketName}
+        BucketName: ${self:custom.PhotosBucket.name}
+    
+    # PhotosBucketPolicy:
+    #   Type: AWS::S3::BucketPolicy
+    #   Properties:
+    #     Bucket: !Ref PhotosBucket
+    #     PolicyDocument:
+    #       Statement:
+    #         - Sid: PublicRead
+    #           Effect: Allow
+    #           Principal: '*'
+    #           Action:
+    #             - s3:GetObject
+    #             - s3:PutObject
+    #           Resource: arn:aws:s3:::${self:custom.PhotosBucket.name}/*
 
 
 custom: 
   bundle:
     linting: false 
+  PhotosBucket:
+    name: photos-bucket-hjesheuhj-${self:provider.stage}

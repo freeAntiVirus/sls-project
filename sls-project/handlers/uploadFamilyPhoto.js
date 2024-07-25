@@ -7,8 +7,10 @@ const dynamoDb = new AWS.DynamoDB.DocumentClient();
 exports.handler = async (event, context) => {
     console.log("Received event:", JSON.stringify(event, null, 2));
 
-    // Extract familyId and base64 image from the request body
-    const { familyId, base64Image } = JSON.parse(event.body);
+    // Extract familyId from the path parameters
+    const { familyId } = event.pathParameters;
+    // Extract base64 image from the request body
+    const { base64Image } = JSON.parse(event.body);
 
     if (!familyId || !base64Image) {
         return {
@@ -19,11 +21,10 @@ exports.handler = async (event, context) => {
     }
 
     const familyTable = process.env.FAMILY_TABLE;
-    const usersTable = process.env.USERS_TABLE;
     const bucketName = process.env.S3_BUCKET_NAME;
 
     try {
-        // Query the family table to get user IDs
+        // Query the family table to get family information
         const familyResult = await dynamoDb.get({
             TableName: familyTable,
             Key: { familyId: familyId }
