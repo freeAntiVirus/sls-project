@@ -5,7 +5,6 @@ const s3 = new AWS.S3();
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
 exports.handler = async (event, context) => {
-    console.log("Received event:", JSON.stringify(event, null, 2));
 
     // Extract familyId from the path parameters
     const { familyId } = event.pathParameters;

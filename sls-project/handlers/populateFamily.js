@@ -9,6 +9,12 @@ module.exports.handler = async (event, context) => {
     const familyId = requestBody.familyId;
     const users = requestBody.users;
 
+    ///////////
+       
+    // check if users in the family already 
+    
+    //////////
+
     const params = {
         TableName: tableName,
         Key: {

@@ -30,12 +30,23 @@ exports.handler = async (event, context) => {
         if (!familyResult.Item) {
             return {
                 statusCode: 404,
-            headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ message: 'Family not found' }),
             };
         }
 
         const userIds = familyResult.Item.users;
+
+        if (!userIds || userIds.length === 0) {
+            return {
+                statusCode: 200,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    familyId: familyId,
+                    userNames: "This family is empty",
+                }),
+            };
+        }
 
         // Query the users table to get the names of the users
         const userNamesPromises = userIds.map(async (userId) => {
