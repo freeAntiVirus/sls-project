@@ -10,7 +10,7 @@ exports.handler = async (event, context) => {
     // Extract familyId from the path parameters
     const { familyId } = event.pathParameters;
     // Extract base64 image from the request body
-    const { base64Image } = JSON.parse(event.body);
+    const base64Image = event.body.replace(/^data:image\/\w+;base64,/,'')
 
     if (!familyId || !base64Image) {
         return {
@@ -51,7 +51,10 @@ exports.handler = async (event, context) => {
         };
 
         const s3Response = await s3.upload(s3Params).promise();
+        
+        // update family with family photo
 
+        
         return {
             statusCode: 200,
             headers: { 'Content-Type': 'application/json' },
