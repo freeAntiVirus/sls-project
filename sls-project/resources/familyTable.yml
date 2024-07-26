@@ -1,0 +1,11 @@
+FamilyTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: familyId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: familyId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${param:familyTableName}

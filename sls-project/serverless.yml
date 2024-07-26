@@ -94,39 +94,28 @@ functions:
 
 resources:
   Resources:
-    UsersTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
-          - AttributeName: birthday
-            AttributeType: S
-        KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
-        GlobalSecondaryIndexes:
-          - IndexName: BirthdayIndex
-            KeySchema:
-              - AttributeName: birthday
-                KeyType: HASH
-            Projection:
-              ProjectionType: ALL
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${param:tableName}
-        
-    FamilyTable:
-      Type: AWS::DynamoDB::Table
-      Properties:
-        AttributeDefinitions:
-          - AttributeName: familyId
-            AttributeType: S
-        KeySchema:
-          - AttributeName: familyId
-            KeyType: HASH
-        BillingMode: PAY_PER_REQUEST
-        TableName: ${param:familyTableName}
-        
+    # UsersTable:
+    #   Type: AWS::DynamoDB::Table
+    #   Properties:
+    #     AttributeDefinitions:
+    #       - AttributeName: userId
+    #         AttributeType: S
+    #       - AttributeName: birthday
+    #         AttributeType: S
+    #     KeySchema:
+    #       - AttributeName: userId
+    #         KeyType: HASH
+    #     GlobalSecondaryIndexes:
+    #       - IndexName: BirthdayIndex
+    #         KeySchema:
+    #           - AttributeName: birthday
+    #             KeyType: HASH
+    #         Projection:
+    #           ProjectionType: ALL
+    #     BillingMode: PAY_PER_REQUEST
+    #     TableName: ${param:tableName}
+    UsersTable: ${file(resources/usersTable.yml):UsersTable}
+    FamilyTable: ${file(resources/familyTable.yml):FamilyTable}
     PhotosBucket:
       Type: AWS::S3::Bucket
       Properties:
