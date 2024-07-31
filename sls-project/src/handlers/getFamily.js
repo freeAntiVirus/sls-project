@@ -1,9 +1,9 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
     console.log("Received event:", JSON.stringify(event, null, 2));
 
     // Extract familyId from query parameters

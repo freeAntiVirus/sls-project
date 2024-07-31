@@ -53,43 +53,43 @@ functions:
     events:
       - httpApi: "*"
   createUser: 
-    handler: handlers/createUser.handler
+    handler: src/handlers/createUser.handler
     events:
       - http:
           method: post
           path: /createUser
   getUser: 
-    handler: handlers/getUsers.handler
+    handler: src/handlers/getUsers.handler
     events:
       - http:
           method: get
           path: /users
   twins: 
-    handler: handlers/twins.handler
+    handler: src/handlers/twins.handler
     events:
       - http:
           method: get
           path: /twins
   createFamily: 
-    handler: handlers/createFamily.handler
+    handler: src/handlers/createFamily.handler
     events:
       - http:
           method: post
           path: /createFamily
   populateFamily: 
-    handler: handlers/populateFamily.handler
+    handler: src/handlers/populateFamily.handler
     events:
       - http:
           method: put
           path: /populateFamily
   getFamily: 
-    handler: handlers/getFamily.handler
+    handler: src/handlers/getFamily.handler
     events:
       - http:
           method: get
           path: /getFamily
   uploadFamilyPhoto:
-    handler: handlers/uploadFamilyPhoto.handler
+    handler: src/handlers/uploadFamilyPhoto.handler
     events:
       - http:
           method: patch

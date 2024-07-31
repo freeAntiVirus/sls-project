@@ -1,10 +1,10 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+import AWS from aws-sdk;
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 const tableName = process.env.USERS_TABLE;
 
-module.exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
     // Retrieve all users
     const scanParams = {
         TableName: tableName

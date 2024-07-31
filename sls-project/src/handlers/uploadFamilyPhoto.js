@@ -1,10 +1,10 @@
 'use strict';
 
-const AWS = require('aws-sdk');
+import AWS from 'aws-sdk';
 const s3 = new AWS.S3();
 const dynamoDb = new AWS.DynamoDB.DocumentClient();
 
-exports.handler = async (event, context) => {
+export const handler = async (event, context) => {
 
     // Extract familyId from the path parameters
     const { familyId } = event.pathParameters;
